@@ -13,20 +13,25 @@
 		<meta name="robots" content="noindex,nofollow"/>
 
 		<script type="text/javascript">
-			var searchParams = new URLSearchParams(window.location.search);
+			var params = new URLSearchParams(window.location.search);
 
-			if (searchParams.has('p')) {
-				var pw = searchParams.get('p');
+			if (params.has('p')) {
+				var pw = params.get('p');
 			} else {
 				var pw = '';
 			}
+			
+			var subDirectory = '/pastes/static/'
 
 			var app = null;
 			// Handle pops
 			var handlePop = function(evt) {
 				var path = evt.target.location.pathname;
-				if (path === '/') { app.newDocument(true); }
-				else { app.loadDocument(path.substring(1, path.length)); }
+				if (path === subDirectory) { app.newDocument(true); }
+				else { 
+					var substr = path.substring(subDirectory.length, path.length);
+					app.loadDocument(substr);
+				}
 			};
 			// Set up the pop state to handle loads, skipping the first load
 			// to make chrome behave like others:
@@ -38,7 +43,7 @@
 			}, 1000);
 			// Construct app and load initial path
 			$(function() {
-				app = new haste('hastebin', { twitter: false, pw: pw });
+				app = new haste('hastebin', { twitter: false, pw: pw, subDirectory: subDirectory });
 				handlePop({ target: window });
 			});
 		</script>

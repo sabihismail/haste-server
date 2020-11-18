@@ -115,27 +115,25 @@ if (config.rateLimits) {
 // first look at API calls
 app.use(route(function(router) {
   // get raw documents - support getting with extension
-
-  router.get('/raw/:id', function(request, response) {
+  router.get('/pastes-raw/:id', function(request, response) {
     return documentHandler.handleRawGet(request, response, config);
   });
 
-  router.head('/raw/:id', function(request, response) {
+  router.head('/pastes-raw/:id', function(request, response) {
     return documentHandler.handleRawGet(request, response, config);
   });
 
   // add documents
-
-  router.post('/documents', function(request, response) {
+  router.post('/pastes-api', function(request, response) {
     return documentHandler.handlePost(request, response);
   });
 
   // get documents
-  router.get('/documents/:id', function(request, response) {
+  router.get('/pastes-api/:id', function(request, response) {
     return documentHandler.handleGet(request, response, config);
   });
 
-  router.head('/documents/:id', function(request, response) {
+  router.head('/pastes-api/:id', function(request, response) {
     return documentHandler.handleGet(request, response, config);
   });
 }));

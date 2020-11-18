@@ -18,7 +18,7 @@ haste_document.prototype.htmlEscape = function(s) {
 // Get this document from the server and lock it here
 haste_document.prototype.load = function(key, callback, lang) {
   var _this = this;
-  $.ajax('/documents/' + key, {
+  $.ajax('/pastes-api/' + key, {
     type: 'get',
     dataType: 'json',
     success: function(res) {
@@ -60,7 +60,7 @@ haste_document.prototype.save = function(data, options, callback) {
   }
   this.data = data;
   var _this = this;
-  $.ajax('/documents', {
+  $.ajax('/pastes-api', {
     type: 'post',
     data: data,
     dataType: 'json',
@@ -251,6 +251,9 @@ haste.prototype.lockDocument = function() {
       if (ret.language) {
         file += '.' + _this.lookupExtensionByType(ret.language);
       }
+      if (_this.options.subDirectory) {
+        file = subDirectory + file.substring(1, file.length);
+      }
       window.history.pushState(null, _this.appName + '-' + ret.key, file);
       _this.fullKey();
       _this.$textarea.val('').hide();
@@ -295,7 +298,7 @@ haste.prototype.configureButtons = function() {
       },
       shortcutDescription: 'alt + r',
       action: function() {
-        window.location.href = '/raw/' + _this.doc.key;
+        window.location.href = '/pastes-raw/' + _this.doc.key;
       }
     },
   ];
