@@ -48,8 +48,12 @@ if (process.env.REDISTOGO_URL && config.storage.type === 'redis') {
   var redisClient = require('redis-url').connect(process.env.REDISTOGO_URL);
   Store = require('./lib/document_stores/redis');
   preferredStore = new Store(config.storage, redisClient);
-}
-else {
+} else if (config.storage.type === 'mysql') {
+  winston.info('MySQL Database Configuration set.');
+  Store = require('./lib/document_stores/mysql');
+  preferredStore = new Store(config.storage);
+} else {
+  winston.info('File Database Configuration set.');
   Store = require('./lib/document_stores/' + config.storage.type);
   preferredStore = new Store(config.storage);
 }
@@ -96,7 +100,8 @@ var documentHandler = new DocumentHandler({
   store: preferredStore,
   maxLength: config.maxLength,
   keyLength: config.keyLength,
-  keyGenerator: keyGenerator
+  keyGenerator: keyGenerator,
+  password: config.uploadPassword,
 });
 
 var app = connect();

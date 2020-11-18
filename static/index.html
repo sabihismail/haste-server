@@ -1,7 +1,6 @@
+<!DOCTYPE html>
 <html>
-
 	<head>
-
 		<title>hastebin</title>
 		<meta charset="utf-8" />
 		<link rel="stylesheet" type="text/css" href="solarized_dark.css"/>
@@ -14,6 +13,14 @@
 		<meta name="robots" content="noindex,nofollow"/>
 
 		<script type="text/javascript">
+			var searchParams = new URLSearchParams(window.location.search);
+
+			if (searchParams.has('p')) {
+				var pw = searchParams.get('p');
+			} else {
+				var pw = '';
+			}
+
 			var app = null;
 			// Handle pops
 			var handlePop = function(evt) {
@@ -31,11 +38,10 @@
 			}, 1000);
 			// Construct app and load initial path
 			$(function() {
-				app = new haste('hastebin', { twitter: true });
+				app = new haste('hastebin', { twitter: false, pw: pw });
 				handlePop({ target: window });
 			});
 		</script>
-
 	</head>
 
 	<body>
@@ -43,13 +49,9 @@
 
 		<div id="key">
 		  <div id="pointer" style="display:none;"></div>
-			<div id="box1">
-				<a href="/about.md" class="logo"></a>
-			</div>
 			<div id="box2">
 				<button class="save function button-picture">Save</button>
 				<button class="new function button-picture">New</button>
-				<button class="duplicate function button-picture">Duplicate & Edit</button>
 				<button class="raw function button-picture">Just Text</button>
 				<button class="twitter function button-picture">Twitter</button>
 			</div>
@@ -62,7 +64,5 @@
 		<div id="linenos"></div>
 		<pre id="box" style="display:none;" class="hljs" tabindex="0"><code></code></pre>
 		<textarea spellcheck="false" style="display:none;"></textarea>
-
 	</body>
-
 </html>

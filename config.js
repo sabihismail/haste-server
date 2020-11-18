@@ -1,5 +1,5 @@
 {
-
+  
   "host": "0.0.0.0",
   "port": 7777,
 
@@ -33,11 +33,14 @@
   },
 
   "storage": {
-    "type": "file"
+    "type": "",
+    "settings": {
+      "host": "",
+      "user": "",
+      "password": "",
+      "database": ""
+    }
   },
 
-  "documents": {
-    "about": "./about.md"
-  }
-
+  "uploadPassword": ""
 }

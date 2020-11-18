@@ -54,7 +54,7 @@ haste_document.prototype.load = function(key, callback, lang) {
 };
 
 // Save this document to the server and lock it here
-haste_document.prototype.save = function(data, callback) {
+haste_document.prototype.save = function(data, options, callback) {
   if (this.locked) {
     return false;
   }
@@ -65,6 +65,9 @@ haste_document.prototype.save = function(data, callback) {
     data: data,
     dataType: 'json',
     contentType: 'text/plain; charset=utf-8',
+    headers: {
+      'pw': options.pw,
+    },
     success: function(res) {
       _this.locked = true;
       _this.key = res.key;
@@ -126,7 +129,7 @@ haste.prototype.lightKey = function() {
 
 // Show the full key
 haste.prototype.fullKey = function() {
-  this.configureKey(['new', 'duplicate', 'twitter', 'raw']);
+  this.configureKey(['raw']);
 };
 
 // Set the key up for certain things to be enabled
@@ -237,7 +240,7 @@ haste.prototype.duplicateDocument = function() {
 // Lock the current document
 haste.prototype.lockDocument = function() {
   var _this = this;
-  this.doc.save(this.$textarea.val(), function(err, ret) {
+  this.doc.save(this.$textarea.val(), this.options, function(err, ret) {
     if (err) {
       _this.showMessage(err.message, 'error');
     }
@@ -263,7 +266,7 @@ haste.prototype.configureButtons = function() {
     {
       $where: $('#box2 .save'),
       label: 'Save',
-      shortcutDescription: 'control + s',
+      shortcutDescription: 'ctrl + s',
       shortcut: function(evt) {
         return evt.ctrlKey && (evt.keyCode === 83);
       },
@@ -279,44 +282,22 @@ haste.prototype.configureButtons = function() {
       shortcut: function(evt) {
         return evt.ctrlKey && evt.keyCode === 78;
       },
-      shortcutDescription: 'control + n',
+      shortcutDescription: 'ctrl + n',
       action: function() {
         _this.newDocument(!_this.doc.key);
       }
     },
     {
-      $where: $('#box2 .duplicate'),
-      label: 'Duplicate & Edit',
-      shortcut: function(evt) {
-        return _this.doc.locked && evt.ctrlKey && evt.keyCode === 68;
-      },
-      shortcutDescription: 'control + d',
-      action: function() {
-        _this.duplicateDocument();
-      }
-    },
-    {
       $where: $('#box2 .raw'),
-      label: 'Just Text',
+      label: 'Text',
       shortcut: function(evt) {
-        return evt.ctrlKey && evt.shiftKey && evt.keyCode === 82;
+        return _this.doc.locked && evt.altKey && evt.keyCode === 82;//evt.ctrlKey && evt.shiftKey && evt.keyCode === 82;
       },
-      shortcutDescription: 'control + shift + r',
+      shortcutDescription: 'alt + r',
       action: function() {
         window.location.href = '/raw/' + _this.doc.key;
       }
     },
-    {
-      $where: $('#box2 .twitter'),
-      label: 'Twitter',
-      shortcut: function(evt) {
-        return _this.options.twitter && _this.doc.locked && evt.shiftKey && evt.ctrlKey && evt.keyCode == 84;
-      },
-      shortcutDescription: 'control + shift + t',
-      action: function() {
-        window.open('https://twitter.com/share?url=' + encodeURI(window.location.href));
-      }
-    }
   ];
   for (var i = 0; i < this.buttons.length; i++) {
     this.configureButton(this.buttons[i]);
@@ -394,5 +375,4 @@ $(function() {
       }
     }
   });
-
 });
