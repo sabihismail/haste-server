@@ -1,7 +1,14 @@
+html {
+	width: 100%;
+	height: 100%;
+}
+
 body {
 	background: #002B36;
 	padding: 20px 50px;
 	margin: 0px;
+	height: calc(100% - 2 * 20px);
+	width: calc(100% - 2 * 50px);
 }
 
 /* textarea */
